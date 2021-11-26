@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menager haseł</title>
+</head>
+
+<body onload="init()">
+    <h1>Menager haseł dla <span id="Login"></span>:</h1>
+    <h2>Hasła Zapisane</h2>
+    <div id="haslo"></div>
+    <input type="text" name="" id="password">
+    <input type="text" name="" id="nazwa">   
+    <button onclick="addTask(); addTaskn();"> Dodaj</button>
+    <script>
+        function init() {
+            if (window.localStorage.getItem('Login') == null) {
+                let name = window.prompt("Podaj swój Login: ");
+                window.localStorage.setItem('Login', name);
+            }
+            document.getElementById('Login').innerHTML = window.localStorage.getItem('Login');
+            let taskList = JSON.parse(window.localStorage.getItem('haslo'));
+            if(taskList == null) {
+                taskList = Array();
+                window.localStorage.setItem('haslo', 
+                                    JSON.stringify(taskList));
+            }
+            showTasks();
+        }
+        function addTask() {
+            let task = document.getElementById('password').value;
+            let taskList = JSON.parse(window.localStorage.getItem('haslo'));
+            taskList.push(task);
+            window.localStorage.setItem('haslo', JSON.stringify(taskList));
+            document.getElementById('password').value = "";
+            showTasks();
+        }
+        function addTaskn() {
+            let task = document.getElementById('nazwa').value;
+            let taskList = JSON.parse(window.localStorage.getItem('haslo'));
+            taskList.push(task);
+            window.localStorage.setItem('haslo', JSON.stringify(taskList));
+            document.getElementById('nazwa').value = "";
+            showTasks();
+        }
+        function showTasks() {
+            let taskListDiv = document.getElementById('haslo');
+            let taskArray = JSON.parse(window.localStorage.getItem('haslo'));
+            let buffer = "";
+            buffer += "<ul>";
+            for(let i=0; i< taskArray.length; i++) {
+                buffer += "<li><button onclick=\"removeTask("+i+")\">Usuń</button>"+taskArray[i]+"</li>";
+            }
+            buffer += "</ul>";
+            taskListDiv.innerHTML = buffer;
+        }
+        function removeTask(i) {
+            let taskArray = JSON.parse(window.localStorage.getItem('haslo'));
+            taskArray.splice(i, 1);
+            window.localStorage.setItem('haslo', JSON.stringify(taskArray));
+            showTasks();
+        }
+    </script>
+</body>
+
+</html>
